@@ -117,7 +117,7 @@ resource "aws_instance" "test-jenkins" {
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
   availability_zone = "us-east-1a"
-  key_name = "jenkins-key-pair"
+  #key_name = "jenkins-key-pair"
 
   network_interface {
     network_interface_id = aws_network_interface.jenkins-test-nic.id
