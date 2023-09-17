@@ -1,9 +1,9 @@
 
 #defining the key pair 
-resource "aws_key_pair" "jenkins_keypair" {
-  key_name = "jenkins-key-pair"
-  public_key = file ("~/.ssh/id_rsa.pub")
-}
+# resource "aws_key_pair" "jenkins_keypair" {
+#   key_name = "jenkins-key-pair"
+#   public_key = file ("~/.ssh/id_rsa.pub")
+# }
 
 #creating a vpc
 resource "aws_vpc" "jenkins-test-vpc" {
