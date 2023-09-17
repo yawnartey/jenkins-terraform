@@ -134,7 +134,6 @@ resource "aws_network_interface" "jenkins-test-nic" {
   subnet_id       = aws_subnet.jenkins-subnet.id
   private_ips     = ["10.0.1.50"]
   security_groups = [aws_security_group.jenkins-allow-web-traffic.id]
-  depends_on = [aws_instance.test-jenkins]
 
 }
 
