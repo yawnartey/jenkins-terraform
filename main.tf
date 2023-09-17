@@ -116,7 +116,7 @@ resource "aws_eip" "terraform-test-eip" {
 resource "aws_instance" "test-terraform" {
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
-  availability_zone = var.az
+  availability_zone = "us-east-1"
   key_name = "terraform-key-pair"
 
   network_interface {

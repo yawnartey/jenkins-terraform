@@ -5,7 +5,3 @@ variable "access_key" {
 variable "secret_key" {
   default = "iK8np0KbKWH8Uissm8HBbuSQZ18RiYk2GIuCYpH+"
 }
-
-variable "az" {
-  
-}
