@@ -116,7 +116,7 @@ resource "aws_eip" "jenkins-test-eip" {
 resource "aws_instance" "test-jenkins" {
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
-  availability_zone = "us-east-1"
+  availability_zone = "us-east-1a"
   key_name = "jenkins-key-pair"
 
   network_interface {
