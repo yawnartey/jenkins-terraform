@@ -96,15 +96,6 @@ resource "aws_security_group" "jenkins-allow-web-traffic" {
   }
 }
 
-#creating your network interface
-resource "aws_network_interface" "jenkins-test-nic" {
-  subnet_id       = aws_subnet.jenkins-subnet.id
-  private_ips     = ["10.0.1.50"]
-  security_groups = [aws_security_group.jenkins-allow-web-traffic.id]
-  depends_on = [aws_instance.test-jenkins]
-
-}
-
 #creating and assigning your elastic ip 
 resource "aws_eip" "jenkins-test-eip" {
   domain                    = "vpc"
@@ -137,6 +128,16 @@ resource "aws_instance" "test-jenkins" {
     Name = "test-jenkins"
   }
 }
+
+#creating your network interface
+resource "aws_network_interface" "jenkins-test-nic" {
+  subnet_id       = aws_subnet.jenkins-subnet.id
+  private_ips     = ["10.0.1.50"]
+  security_groups = [aws_security_group.jenkins-allow-web-traffic.id]
+  depends_on = [aws_instance.test-jenkins]
+
+}
+
 
 output "instance_pub_ip_addr" {
   value =  aws_eip.jenkins-test-eip.public_ip
