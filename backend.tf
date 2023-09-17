@@ -1,14 +1,14 @@
 #create the S3 bucket for your state files 
-resource "aws_s3_bucket" "andlanc-jenkins-state-files" {
-  bucket = "andlanc-jenkins-state-files"
+resource "aws_s3_bucket" "jenkins-state-files" {
+  bucket = "jenkins-state-files"
   tags = {
-    Name  = "andlanc-state-files"
+    Name  = "jenkins-state-files"
   }
 }
 
 #enable bucket versioning 
-resource "aws_s3_bucket_versioning" "andlanc-jenkins-state-files-versioning" {
-  bucket = aws_s3_bucket.andlanc-jenkins-state-files.id
+resource "aws_s3_bucket_versioning" "jenkins-state-files-versioning" {
+  bucket = aws_s3_bucket.jenkins-state-files.id
   versioning_configuration {
     status = "Enabled"
   }
