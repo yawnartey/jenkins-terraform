@@ -1,64 +1,64 @@
 
 #defining the key pair 
-resource "aws_key_pair" "terraform_keypair" {
-  key_name = "terraform-key-pair"
+resource "aws_key_pair" "jenkins_keypair" {
+  key_name = "jenkins-key-pair"
   public_key = file ("~/.ssh/id_rsa.pub")
 }
 
 #creating a vpc
-resource "aws_vpc" "terraform-test-vpc" {
+resource "aws_vpc" "jenkins-test-vpc" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "terraform-vpc"
+    Name = "jenkins-vpc"
   }
 }
 
 #creating internet gateway for my vpc above 
-resource "aws_internet_gateway" "terraform-internet-gateway" {
-  vpc_id = aws_vpc.terraform-test-vpc.id
+resource "aws_internet_gateway" "jenkins-internet-gateway" {
+  vpc_id = aws_vpc.jenkins-test-vpc.id
 
   tags = {
-    Name = "terraform-internet-gateway"
+    Name = "jenkins-internet-gateway"
   }
 }
 
 #creating the route table
-resource "aws_route_table" "terraform-route-table" {
-  vpc_id = aws_vpc.terraform-test-vpc.id
+resource "aws_route_table" "jenkins-route-table" {
+  vpc_id = aws_vpc.jenkins-test-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.terraform-internet-gateway.id
+    gateway_id = aws_internet_gateway.jenkins-internet-gateway.id
   }
 
   tags = {
-    Name = "terraform=route-table"
+    Name = "jenkins=route-table"
   }
 }
 
 #creating the subnet
-resource "aws_subnet" "terraform-subnet" {
-  vpc_id     = aws_vpc.terraform-test-vpc.id
+resource "aws_subnet" "jenkins-subnet" {
+  vpc_id     = aws_vpc.jenkins-test-vpc.id
   cidr_block = "10.0.1.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "terraform-test-subnet"
+    Name = "jenkins-test-subnet"
   }
 }
 
 #associate your subnet to your route table
-resource "aws_route_table_association" "terraform-route-table-association" {
-  subnet_id      = aws_subnet.terraform-subnet.id
-  route_table_id = aws_route_table.terraform-route-table.id
+resource "aws_route_table_association" "jenkins-route-table-association" {
+  subnet_id      = aws_subnet.jenkins-subnet.id
+  route_table_id = aws_route_table.jenkins-route-table.id
 }
 
 #creating your security group
-resource "aws_security_group" "terraform-allow-web-traffic" {
+resource "aws_security_group" "jenkins-allow-web-traffic" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.terraform-test-vpc.id
+  vpc_id      = aws_vpc.jenkins-test-vpc.id
 
   ingress {
     description      = "HTTPS from VPC"
@@ -92,35 +92,35 @@ resource "aws_security_group" "terraform-allow-web-traffic" {
   }
 
   tags = {
-    Name = "terraform-allow-web-traffic"
+    Name = "jenkins-allow-web-traffic"
   }
 }
 
 #creating your network interface
-resource "aws_network_interface" "terraform-test-nic" {
-  subnet_id       = aws_subnet.terraform-subnet.id
+resource "aws_network_interface" "jenkins-test-nic" {
+  subnet_id       = aws_subnet.jenkins-subnet.id
   private_ips     = ["10.0.1.50"]
-  security_groups = [aws_security_group.terraform-allow-web-traffic.id]
+  security_groups = [aws_security_group.jenkins-allow-web-traffic.id]
 
 }
 
 #creating and assigning your elastic ip 
-resource "aws_eip" "terraform-test-eip" {
+resource "aws_eip" "jenkins-test-eip" {
   domain                    = "vpc"
-  network_interface         = aws_network_interface.terraform-test-nic.id
+  network_interface         = aws_network_interface.jenkins-test-nic.id
   associate_with_private_ip = "10.0.1.50"
-  depends_on                = [aws_internet_gateway.terraform-internet-gateway]
+  depends_on                = [aws_internet_gateway.jenkins-internet-gateway]
 }
 
 #creating the ubuntu server (instance) and launching your webserver
-resource "aws_instance" "test-terraform" {
+resource "aws_instance" "test-jenkins" {
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
   availability_zone = "us-east-1"
-  key_name = "terraform-key-pair"
+  key_name = "jenkins-key-pair"
 
   network_interface {
-    network_interface_id = aws_network_interface.terraform-test-nic.id
+    network_interface_id = aws_network_interface.jenkins-test-nic.id
     device_index         = 0
   }
 
@@ -133,26 +133,26 @@ resource "aws_instance" "test-terraform" {
     EOF
 
   tags = {
-    Name = "test-terraform"
+    Name = "test-jenkins"
   }
 }
 
 output "instance_pub_ip_addr" {
-  value =  aws_eip.terraform-test-eip.public_ip
+  value =  aws_eip.jenkins-test-eip.public_ip
 }
 
 output "ami" {
-  value =  aws_instance.test-terraform.ami 
+  value =  aws_instance.test-jenkins.ami 
 }
 
 output "ami_id" {
-  value = aws_instance.test-terraform.id
+  value = aws_instance.test-jenkins.id
 }
 
 output "ami_private_ip" {
-  value = aws_instance.test-terraform.private_ip
+  value = aws_instance.test-jenkins.private_ip
 }
 
 output "instance_state" {
-  value = aws_instance.test-terraform.instance_state
+  value = aws_instance.test-jenkins.instance_state
 }
