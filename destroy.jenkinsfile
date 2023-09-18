@@ -22,8 +22,8 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'pwd;cd jenkins-terraform/ ; terraform init'
-                sh "pwd;cd jenkins-terraform/ ; terraform plan -destroy -out tfdestroyplan"
+                // sh 'pwd;cd jenkins-terraform/ ; terraform init'
+                // sh "pwd;cd jenkins-terraform/ ; terraform plan -destroy -out tfdestroyplan"
                 sh 'pwd;cd jenkins-terraform/ ; terraform show -no-color tfdestroyplan > tfdestroyplan.txt'
             }
         }
