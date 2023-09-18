@@ -1,8 +1,8 @@
 #create the S3 bucket for your state files 
 resource "aws_s3_bucket" "jenkins-state-files" {
-  bucket = "jenkins-state-files-one"
+  bucket = "jenkins-state-files-two"
   tags = {
-    Name  = "jenkins-state-files-one"
+    Name  = "jenkins-state-files-two"
   }
 }
 
