@@ -102,6 +102,10 @@ resource "aws_network_interface" "jenkins-test-nic" {
   private_ips     = ["10.0.1.50"]
   security_groups = [aws_security_group.jenkins-allow-web-traffic.id] 
   # depends_on = [aws_instance.test-jenkins]
+
+  tags{
+    Name = "jenkins test network interface"
+  }
 }
 
 #creating and assigning your elastic ip 
