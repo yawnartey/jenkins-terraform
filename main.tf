@@ -96,12 +96,23 @@ resource "aws_security_group" "jenkins-allow-web-traffic" {
   }
 }
 
+#creating your network interface
+resource "aws_network_interface" "jenkins-test-nic" {
+  subnet_id       = aws_subnet.jenkins-subnet.id
+  private_ips     = ["10.0.1.50"]
+  security_groups = [aws_security_group.jenkins-allow-web-traffic.id] 
+  # depends_on = [aws_instance.test-jenkins]
+}
+
 #creating and assigning your elastic ip 
 resource "aws_eip" "jenkins-test-eip" {
   domain                    = "vpc"
   network_interface         = aws_network_interface.jenkins-test-nic.id
   associate_with_private_ip = "10.0.1.50"
-  depends_on                = [aws_internet_gateway.jenkins-internet-gateway]
+  depends_on = [
+    aws_internet_gateway.jenkins-internet-gateway,
+    aws_instance.test-jenkins
+  ]
 }
 
 #creating the ubuntu server (instance) and launching your webserver
@@ -129,13 +140,6 @@ resource "aws_instance" "test-jenkins" {
   }
 }
 
-#creating your network interface
-resource "aws_network_interface" "jenkins-test-nic" {
-  subnet_id       = aws_subnet.jenkins-subnet.id
-  private_ips     = ["10.0.1.50"]
-  security_groups = [aws_security_group.jenkins-allow-web-traffic.id]
-
-}
 
 
 output "instance_pub_ip_addr" {
