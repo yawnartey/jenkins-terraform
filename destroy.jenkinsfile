@@ -45,7 +45,7 @@ pipeline {
 
         stage('Destroy') {
             steps {
-                sh "pwd;cd jenkins-terraform/ ; terraform apply -auto-approve tfdestroyplan"
+                sh "pwd;cd jenkins-terraform/ ; terraform destroy -auto-approve tfdestroyplan"
             }
         }
     }
