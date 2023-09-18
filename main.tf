@@ -103,7 +103,7 @@ resource "aws_network_interface" "jenkins-test-nic" {
   security_groups = [aws_security_group.jenkins-allow-web-traffic.id] 
   # depends_on = [aws_instance.test-jenkins]
 
-  tags{
+  tags = {
     Name = "jenkins test network interface"
   }
 }
